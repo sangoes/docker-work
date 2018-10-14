@@ -1,0 +1,55 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /usr/docker/nginx/www/:/var/www/html/:rw
+      - /usr/docker/nginx/conf/nginx/conf.d:/etc/nginx/conf.d/:ro
+      - /usr/docker/nginx/conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /usr/docker/nginx/log/nginx/:/var/log/nginx/:rw
+    networks:
+      - net-nginx
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - /usr/docker/mysql/conf/mysql/my.cnf:/etc/mysql/my.cnf:ro
+      - /usr/docker/mysql/mysql/:/var/lib/mysql/:rw
+      - /usr/docker/mysql/log/mysql/:/var/log/mysql/:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: "Sangoes@15s09"
+    networks:
+      - net-mysql
+  redis:
+    image: redis:4.0
+    restart: always
+    networks:
+      - net-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /usr/docker/redis/data:/data
+      - /usr/docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  rabbit:
+    image: rabbitmq:management
+    hostname: rabbit
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=sangoes
+      - RABBITMQ_DEFAULT_PASS=Sangoes@15s09
+    networks:
+      - net-rabbitmq
+networks: 
+  net-nginx:
+  net-rabbitmq:
+  net-redis:
+  net-mysql:
