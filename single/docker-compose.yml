@@ -1,7 +1,7 @@
 version: "3"
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.15.5
     restart: always
     ports:
     - "80:80"
@@ -22,9 +22,9 @@ services:
     - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
     - ./mysql/:/var/lib/mysql/:rw
     environment:
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 123456
-      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_USER: passball
+      MYSQL_PASSWORD: "Passball@15s09"
+      MYSQL_ROOT_PASSWORD: "Sangoes@15s09"
     networks:
     - net-mysql
   redis:
