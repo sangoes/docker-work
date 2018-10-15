@@ -53,7 +53,9 @@ services:
     networks:
     - net-rabbitmq
   fastdfs:
-    build: ./dockerfile/fdfs/
+    build:
+      context: ./
+      dockerfile: dockerfile/fdfs/DockerFile
     image: jerrychir/fastdfs:5.11
     # 该容器是否需要开机启动+自动重启。若需要，则取消注释。
     restart: always
@@ -68,13 +70,10 @@ services:
     - ./fdfs:/var/local/fdfs
     # 使docker具有root权限以读写主机上的目录
     privileged: true
-      # 网络模式为host，即直接使用主机的网络接口
-      network_mode: "host"
-#    networks:
-#    - net-fdfs
+    # 网络模式为host，即直接使用主机的网络接口
+    network_mode: "host"
 networks:
   net-nginx:
   net-rabbitmq:
   net-redis:
   net-mysql:
-#  net-fdfs:
