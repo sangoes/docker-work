@@ -1,7 +1,7 @@
 # 使用超小的Linux镜像alpine
 FROM alpine:3.6
 
-MAINTAINER jerrychir<jerrychir@163.com>
+MAINTAINER jerrychir <jerrchir@163.com>
 
 ENV HOME /root
 
@@ -9,20 +9,21 @@ ENV HOME /root
 RUN    apk update \
         && apk add --no-cache --virtual .build-deps bash gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl gnupg libxslt-dev gd-dev geoip-dev
 
-# 复制工具
-ADD soft ${HOME}
-
-RUN     cd ${HOME} \
-        && tar zxf libfastcommon-1.0.38.tar.gz \
-        && tar zxf fastdfs-5.11.tar.gz \
-        && tar zxf fastdfs-nginx-module-1.20.tar.gz
+# 下载fastdfs、libfastcommon、nginx插件的源码
+RUN     cd /root \
+        && curl -fSL https://github.com/happyfish100/libfastcommon/archive/V1.0.36.tar.gz -o fastcommon.tar.gz \
+        && curl -fSL  https://codeload.github.com/happyfish100/fastdfs/tar.gz/V5.11 -o fastfs.tar.gz \
+        && curl -fSL  https://github.com/happyfish100/fastdfs-nginx-module/archive/master.tar.gz -o nginx-module.tar.gz \
+        && tar zxf fastcommon.tar.gz \
+        && tar zxf fastfs.tar.gz \
+        && tar zxf nginx-module.tar.gz
 
 # 安装libfastcommon
-RUN     cd ${HOME}/libfastcommon-1.0.38/ \
+RUN     cd ${HOME}/libfastcommon-1.0.36/ \
         && ./make.sh \
         && ./make.sh install
 
-# 安装fastdfs
+# 安装fastdfs v5.11
 RUN     cd ${HOME}/fastdfs-5.11/ \
         && ./make.sh \
         && ./make.sh install
@@ -38,34 +39,35 @@ RUN     cd /etc/fdfs/ \
 
 # 获取nginx源码，与fastdfs插件一起编译
 RUN     cd ${HOME} \
-        && tar zxf nginx-1.13.6.tar.gz \
-        && chmod u+x ${HOME}/fastdfs-nginx-module-1.20/src/config \
-        && cd nginx-1.13.6 \
-        && ./configure --add-module=${HOME}/fastdfs-nginx-module-1.20/src \
+        && curl -fSL http://nginx.org/download/nginx-1.12.2.tar.gz -o nginx-1.12.2.tar.gz \
+        && tar zxf nginx-1.12.2.tar.gz \
+        && chmod u+x ${HOME}/fastdfs-nginx-module-master/src/config \
+        && cd nginx-1.12.2 \
+        && ./configure --add-module=${HOME}/fastdfs-nginx-module-master/src \
         && make && make install
 
 # 设置nginx和fastdfs联合环境，并配置nginx
-RUN     cp ${HOME}/fastdfs-nginx-module-1.20/src/mod_fastdfs.conf /etc/fdfs/ \
+RUN     cp ${HOME}/fastdfs-nginx-module-master/src/mod_fastdfs.conf /etc/fdfs/ \
         && sed -i "s|^store_path0.*$|store_path0=/var/local/fdfs/storage|g" /etc/fdfs/mod_fastdfs.conf \
         && sed -i "s|^url_have_group_name =.*$|url_have_group_name = true|g" /etc/fdfs/mod_fastdfs.conf \
         && cd ${HOME}/fastdfs-5.11/conf/ \
         && cp http.conf mime.types anti-steal.jpg /etc/fdfs/ \
         && echo -e "\
-           events {\n\
-           worker_connections  1024;\n\
-           }\n\
-           http {\n\
-           include       mime.types;\n\
-           default_type  application/octet-stream;\n\
-           server {\n\
-               listen 8888;\n\
-               server_name localhost;\n\
+events {\n\
+    worker_connections  1024;\n\
+}\n\
+http {\n\
+    include       mime.types;\n\
+    default_type  application/octet-stream;\n\
+    server {\n\
+        listen 8888;\n\
+        server_name localhost;\n\
 
-               location ~ /group[0-9]/M00 {\n\
-                 ngx_fastdfs_module;\n\
-               }\n\
-             }\n\
-            }" >/usr/local/nginx/conf/nginx.conf
+        location ~ /group[0-9]/M00 {\n\
+            ngx_fastdfs_module;\n\
+        }\n\
+    }\n\
+}">/usr/local/nginx/conf/nginx.conf
 
 # 清理文件
 RUN rm -rf ${HOME}/*
