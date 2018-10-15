@@ -68,13 +68,13 @@ services:
     - ./fdfs:/var/local/fdfs
     # 使docker具有root权限以读写主机上的目录
     privileged: true
-    # 网络模式为host，即直接使用主机的网络接口
-    #    network_mode: "host"
-    networks:
-    - net-fdfs
+      # 网络模式为host，即直接使用主机的网络接口
+      network_mode: "host"
+#    networks:
+#    - net-fdfs
 networks:
   net-nginx:
   net-rabbitmq:
   net-redis:
   net-mysql:
-  net-fdfs:
+#  net-fdfs:
