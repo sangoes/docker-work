@@ -32,9 +32,9 @@ RUN     cd /etc/fdfs/ \
         && cp storage.conf.sample storage.conf \
         && cp tracker.conf.sample tracker.conf \
         && cp client.conf.sample client.conf \
-        && sed -i "s|/home/jerrychir/fastdfs|/var/local/fdfs/tracker|g" /etc/fdfs/tracker.conf \
-        && sed -i "s|/home/jerrychir/fastdfs|/var/local/fdfs/storage|g" /etc/fdfs/storage.conf \
-        && sed -i "s|/home/jerrychir/fastdfs|/var/local/fdfs/storage|g" /etc/fdfs/client.conf
+        && sed -i "s|/home/yuqing/fastdfs|/var/local/fdfs/tracker|g" /etc/fdfs/tracker.conf \
+        && sed -i "s|/home/yuqing/fastdfs|/var/local/fdfs/storage|g" /etc/fdfs/storage.conf \
+        && sed -i "s|/home/yuqing/fastdfs|/var/local/fdfs/storage|g" /etc/fdfs/client.conf
 
 # 获取nginx源码，与fastdfs插件一起编译
 RUN     cd ${HOME} \
