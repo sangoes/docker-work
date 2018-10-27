@@ -13,7 +13,45 @@ services:
       - ./conf/conf.d:/etc/nginx/conf.d
     networks:
       - net-nginx
-#
+  mysql:
+    image: mysql:5.7.23
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - ./mysql/:/var/lib/mysql/:rw
+    environment:
+      MYSQL_USER: passball
+      MYSQL_PASSWORD: "Passball@15s09"
+      MYSQL_ROOT_PASSWORD: "Sangoes@15s09"
+    networks:
+      - net-mysql
+  redis:
+    image: redis:4.0.11
+    restart: always
+    networks:
+      - net-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+  rabbit:
+    image: rabbitmq:management
+    hostname: rabbit
+    restart: always
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=sangoes
+      - RABBITMQ_DEFAULT_PASS=Sangoes@15s09
+    networks:
+      - net-rabbitmq
 #  fastdfs:
 #    build:
 #      context: ./
@@ -36,6 +74,6 @@ services:
 #    network_mode: "host"
 networks:
   ? net-nginx
-  # net-rabbitmq:
-  # net-redis:
-  # net-mysql:
+  ? net-rabbitmq
+  ? net-redis
+  ? net-mysql
