@@ -20,9 +20,9 @@ services:
       - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - ./mysql/:/var/lib/mysql/:rw
     environment:
-      MYSQL_USER: passball
-      MYSQL_PASSWORD: "Passball@15s09"
-      MYSQL_ROOT_PASSWORD: "Sangoes@15s09"
+      MYSQL_USER: sangoes
+      MYSQL_PASSWORD: "Sangoes123456"
+      MYSQL_ROOT_PASSWORD: "Sangoes123456"
   redis:
     image: redis:4.0.11
     restart: always
@@ -44,7 +44,7 @@ services:
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=sangoes
-      - RABBITMQ_DEFAULT_PASS=Sangoes@15s09
+      - RABBITMQ_DEFAULT_PASS=Sangoes123456
 #  fastdfs:
 #    build:
 #      context: ./
@@ -57,7 +57,7 @@ services:
 #    # nginx服务端口
 #    - WEB_PORT=8888
 #    # docker所在主机的IP地址
-#    - IP=47.88.229.205
+#    - IP=127.0.0.1
 #    volumes:
 #    # 将本地目录映射到docker容器内的fastdfs数据存储目录，将fastdfs文件存储到主机上，以免每次重建docker容器，之前存储的文件就丢失了。
 #    - ./fdfs:/var/local/fdfs
