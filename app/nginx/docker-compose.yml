@@ -12,8 +12,8 @@ services:
     volumes:
       - /docker/nginx/www:/usr/share/nginx/html:ro
       - /docker/nginx/logs:/var/log/nginx
-      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      - /docker/nginx/conf/conf.d:/etc/nginx/conf.d
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./conf/conf.d:/etc/nginx/conf.d
     # 使docker具有root权限以读写主机上的目录
     privileged: true
     # 网络模式为host，即直接使用主机的网络接口
