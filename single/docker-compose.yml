@@ -57,6 +57,20 @@ services:
       - RABBITMQ_DEFAULT_PASS=Sangoes123456
     networks:
       - net-sangoes
+  jenkins:
+    build: ./jenkins
+    image: sangoes/jenkins
+    restart: always
+    container_name: jenkins
+    ports:
+      - "8181:8080"
+      - "50000:50000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/jenkins/bin:/bin/docker
+      - /docker/jenkins/data:/var/jenkins_home
+    networks:
+      - net-sangoes
 #  fastdfs:
 #    build:
 #      context: ./
