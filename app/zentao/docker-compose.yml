@@ -11,8 +11,8 @@ services:
     ports:
       - "8888:80"
     volumes:
-      - /docker/data/www:/app/zentaopms
-      - /docker/data/data:/var/lib/mysql
+      - /docker/zentao/data/www:/app/zentaopms
+      - /docker/zentao/data/data:/var/lib/mysql
     # 使docker具有root权限以读写主机上的目录
     privileged: true
     # 网络模式为host，即直接使用主机的网络接口
